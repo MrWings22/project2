@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Rating Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .review-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+        }
+        .stars {
+            display: flex;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .star {
+            font-size: 40px;
+            color: gray;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        .star:hover,
+        .star.active {
+            color: gold;
+            transform: scale(1.2);
+        }
+        textarea {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+        }
+        .btn:hover {
+            background: darkblue;
+        }
+        .average-rating {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="review-container">
+        <h2>Leave a Review</h2>
+        <div class="stars" id="stars">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <textarea id="reviewText" placeholder="Write your review..."></textarea>
+        <button class="btn" id="submitReview">Submit Review</button>
+        <div class="average-rating" id="averageRating">Average Rating: 0/5</div>
+    </div>
+
+    <script>
+        let selectedRating = 0; 
+        let ratings = []; // Stores all ratings to calculate average
+
+        document.querySelectorAll(".star").forEach(star => {
+            star.addEventListener("click", function() {
+                selectedRating = parseInt(this.getAttribute("data-value"));
+                
+                // Update star colors
+                document.querySelectorAll(".star").forEach(s => {
+                    s.classList.remove("active");
+                });
+                for (let i = 0; i < selectedRating; i++) {
+                    document.querySelectorAll(".star")[i].classList.add("active");
+                }
+
+                // Update average rating display instantly
+                updateAverageRating();
+            });
+        });
+
+        document.getElementById("submitReview").addEventListener("click", function() {
+            if (selectedRating === 0) {
+                alert("Please select a rating before submitting.");
+                return;
+            }
+
+            ratings.push(selectedRating); // Store the rating
+            updateAverageRating(); // Recalculate the average rating
+
+            alert("Review submitted!");
+        });
+
+        function updateAverageRating() {
+            let avg = ratings.length ? (ratings.reduce((a, b) => a + b, 0) / ratings.length) : selectedRating;
+            document.getElementById("averageRating").innerText = `Average Rating: ${avg.toFixed(1)}/5`;
+        }
+    </script>
+
+</body>
+</html>
+
